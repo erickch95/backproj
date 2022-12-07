@@ -3,10 +3,12 @@
 Express
 Port 4000
 
-# INSTALL
+## INSTALL
 
 npm -i
 
-# RUN
+## RUN
 
 nodemon server.js
+
+## Add directory ../uploadPDF/ or change. 

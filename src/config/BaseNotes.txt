@@ -1,0 +1,21 @@
+Se utiliza como Base de Datos MYSQL.
+Crear tabla para los usuarios con roles (Fiscal o Registrador).
+Solo se utiliza nombre, este debe ser el NOMBRE COMPLETO del usuario.
+Por defecto, al registrar un usuario nuevo, este se registra como rol Fiscal.
+Para crear un usuario con rol Registrador, se debe realizar de manera directa en la Base de Datos.
+Si se elimina un usuario, tambien se eliminaran sus conminatorias (ON DELETE CASCADE). 
+Modificar tabla usuarios para que el id_usuario comience en 100. 
+
+Crear tabla para las conminatorias. 
+Una conminatoria solo puede tener un Fiscal. 
+Puede existir mas de una conminatoria con el mismo codigo. 
+Se sube la ruta que contiene el respaldo PDF. 
+Modificar tabla usuarios para que el id_conminatoria comience en 1000.
+
+Insertar datos ficticios. 
+
+
+
+Creamos un contenedor en docker: nombre contenedor: conmi, usuario: root, password: root-root, nombre de la base de datos: conminatorias
+
+sudo docker run --name conmi -e TZ=America/La_Paz -e MYSQL_ROOT_PASSWORD=root-root -e MYSQL_DATABASE=conminatorias -p 3306:3306 -d mysql

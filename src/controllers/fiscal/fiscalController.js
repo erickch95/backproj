@@ -2,12 +2,12 @@
 // Puede editar su perfil y realizar conminatorias.
 const jwt = require("jsonwebtoken");
 const conn = require("../../config/dbConn");
-const secret = require("../../config/jwtSecret");
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const TABLECONMINATORIAS = "TablaConminatorias";
 const TABLEUSUARIOS = "TablaUsuarios";
-
+const env = require("dotenv");
+env.config();
 let decodedFiscal = "";
 // Funcion para verificar si es Fiscal y si tiene el Token
 // "auth" es enviado por Frontend, verifica si el id del usuario y el id del token coinciden
@@ -26,7 +26,7 @@ isFiscalAuthorized = async (req, res) => {
   const jwtToken = req.headers.authorization.split(" ")[1];
 
   try {
-    var decodedFiscal = jwt.verify(jwtToken, secret.word);
+    var decodedFiscal = jwt.verify(jwtToken, process.env.WORD_JWT);
   } catch (jwtError) {
     console.log("Sesion JWT expirada.");
     return res.status(422).send({
@@ -87,7 +87,7 @@ exports.updateFiscal = async (req, res, next) => {
       return noFiscal;
     }
     const jwtToken = req.headers.authorization.split(" ")[1];
-    var decodedFiscal = jwt.verify(jwtToken, secret.word);
+    var decodedFiscal = jwt.verify(jwtToken, process.env.WORD_JWT);
 
     const [row] = await conn.execute(
       `SELECT * FROM ${TABLEUSUARIOS} WHERE id_usuario = ?`,
@@ -163,7 +163,7 @@ exports.getFiscalConminatorias = async (req, res, next) => {
       return noFiscal;
     }
     const jwtToken = req.headers.authorization.split(" ")[1];
-    var decodedFiscal = jwt.verify(jwtToken, secret.word);
+    var decodedFiscal = jwt.verify(jwtToken, process.env.WORD_JWT);
     console.log(decodedFiscal.id + " " + req.query.option);
     if (req.query.option) {
       const [row] = await conn.execute(
@@ -247,7 +247,7 @@ exports.doneFiscalConminatoria = async (req, res, next) => {
       });
     }
     const jwtToken = req.headers.authorization.split(" ")[1];
-    var decodedFiscal = jwt.verify(jwtToken, secret.word);
+    var decodedFiscal = jwt.verify(jwtToken, process.env.WORD_JWT);
     const [hecho] = await conn.execute(
       `UPDATE ${TABLECONMINATORIAS} SET realizado = true, 
     fecha_realizado = NOW(),

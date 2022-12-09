@@ -2,13 +2,14 @@
 // Puede crear, editar, eliminar conminatorias.
 const jwt = require("jsonwebtoken");
 const conn = require("../../config/dbConn");
-const secret = require("../../config/jwtSecret");
 const { validationResult } = require("express-validator");
 const fs = require("fs"); // Conexion con el filesystem host.
 
 const TABLECONMINATORIAS = "TablaConminatorias";
 const TABLEUSUARIOS = "TablaUsuarios";
 const IP_API = "192.168.166.66:4000";
+const env = require("dotenv");
+env.config();
 // Funcion para eliminar un archivo subido si hay problemas en la validadcion.
 function deleteDocument(req) {
   console.log("delete", req);
@@ -50,7 +51,7 @@ isRegistradorConminatorias = async (req, res) => {
   }
   const jwtToken = req.headers.authorization.split(" ")[1];
   try {
-    var decodedConminatorias = jwt.verify(jwtToken, secret.word);
+    var decodedConminatorias = jwt.verify(jwtToken, process.env.WORD_JWT);
   } catch (jwtError) {
     console.log("Sesion JWT expirada.");
     return res.status(401).send({
@@ -124,7 +125,7 @@ exports.insertConmminatoria = async (req, res, next) => {
     }
     const filePath = `http://${IP_API}/upload/${req.file.filename}`;
     const jwtToken = req.headers.authorization.split(" ")[1];
-    var decodedConminatorias = jwt.verify(jwtToken, secret.word);
+    var decodedConminatorias = jwt.verify(jwtToken, process.env.WORD_JWT);
     const [rows] = await conn.execute(
       `INSERT INTO ${TABLECONMINATORIAS}(codigo,\
         denunciados,\
@@ -539,7 +540,7 @@ exports.updateConminatoria = async (req, res, next) => {
       req.body.directorio_pdf
     );
     const jwtToken = req.headers.authorization.split(" ")[1];
-    var decodedConminatorias = jwt.verify(jwtToken, secret.word);
+    var decodedConminatorias = jwt.verify(jwtToken, process.env.WORD_JWT);
     if (req.body.codigo) {
       row[0].codigo = req.body.codigo;
     }
@@ -638,7 +639,7 @@ exports.statusConminatoria = async (req, res, next) => {
       return noRegistradorConminatorias;
     }
     const jwtToken = req.headers.authorization.split(" ")[1];
-    var decodedConminatorias = jwt.verify(jwtToken, secret.word);
+    var decodedConminatorias = jwt.verify(jwtToken, process.env.WORD_JWT);
     const [row] = await conn.execute(
       `SELECT codigo as codigo,\
       IF(oculto = false,"1","0") as estado\
@@ -692,7 +693,7 @@ exports.doneConminatoria = async (req, res, next) => {
       return noRegistradorConminatorias;
     }
     const jwtToken = req.headers.authorization.split(" ")[1];
-    var decodedConminatorias = jwt.verify(jwtToken, secret.word);
+    var decodedConminatorias = jwt.verify(jwtToken, process.env.WORD_JWT);
 
     const [row] = await conn.execute(
       `SELECT codigo

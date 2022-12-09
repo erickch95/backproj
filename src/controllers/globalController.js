@@ -2,11 +2,11 @@
 // Devuelve informacion del usuario con sesion iniciada.
 const jwt = require("jsonwebtoken");
 const conn = require("../config/dbConn");
-const secret = require("../config/jwtSecret");
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const TABLEUSUARIOS = "TablaUsuarios";
-
+const env = require("dotenv");
+env.config();
 // Funcion para verificar el rol.
 
 isAnyUser = (req, res) => {
@@ -25,7 +25,7 @@ isAnyUser = (req, res) => {
   const jwtToken = req.headers.authorization.split(" ")[1];
   console.log("token", jwtToken);
   try {
-    var decodedUser = jwt.verify(jwtToken, secret.word);
+    var decodedUser = jwt.verify(jwtToken, process.env.WORD_JWT);
   } catch (jwtError) {
     console.log("Sesion JWT expirada.");
     return res.status(401).send({
@@ -52,7 +52,7 @@ exports.getCurrentById = async (req, res, next) => {
       return noUser;
     }
     const jwtToken = req.headers.authorization.split(" ")[1];
-    var decodedUser = jwt.verify(jwtToken, secret.word);
+    var decodedUser = jwt.verify(jwtToken, process.env.WORD_JWT);
     const [row] = await conn.execute(
       `SELECT id_usuario, cedula, nombre, telefono, rol_usuario, usuario_modificado, rol_usuario_modificado_por FROM ${TABLEUSUARIOS} WHERE id_usuario = ? AND rol_usuario = ? AND bloqueado = 0`,
       [decodedUser.id, decodedUser.role]

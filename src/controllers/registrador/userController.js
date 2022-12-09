@@ -2,11 +2,11 @@
 // Puede crear, editar, eliminar usuarios.
 const jwt = require("jsonwebtoken");
 const conn = require("../../config/dbConn");
-const secret = require("../../config/jwtSecret");
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const TABLEUSUARIOS = "TablaUsuarios";
-
+const env = require("dotenv");
+env.config();
 // Funcion para verificar si es Registrador y si tiene el Token
 
 isRegistradorUsers = async (req, res) => {
@@ -25,7 +25,7 @@ isRegistradorUsers = async (req, res) => {
 
   console.log("token", jwtToken);
   try {
-    var decodedUsers = jwt.verify(jwtToken, secret.word);
+    var decodedUsers = jwt.verify(jwtToken, process.env.WORD_JWT);
   } catch (jwtError) {
     console.log("Sesion JWT expirada.");
     return res.status(401).send({
@@ -75,7 +75,7 @@ exports.registerUser = async (req, res, next) => {
       });
     }
     const jwtToken = req.headers.authorization.split(" ")[1];
-    var decodedUsers = jwt.verify(jwtToken, secret.word);
+    var decodedUsers = jwt.verify(jwtToken, process.env.WORD_JWT);
     const hashPass = await bcrypt.hash(req.body.clave, 12);
     const [rows] = await conn.execute(
       `INSERT INTO ${TABLEUSUARIOS}(cedula,
@@ -232,7 +232,7 @@ exports.updateUser = async (req, res, next) => {
       });
     }
     const jwtToken = req.headers.authorization.split(" ")[1];
-    var decodedUsers = jwt.verify(jwtToken, secret.word);
+    var decodedUsers = jwt.verify(jwtToken, process.env.WORD_JWT);
     if (req.body.cedula) {
       row[0].cedula = req.body.cedula;
     }
@@ -326,7 +326,7 @@ exports.statusUser = async (req, res, next) => {
       estado = "desbloqueado";
     }
     const jwtToken = req.headers.authorization.split(" ")[1];
-    var decodedUsers = jwt.verify(jwtToken, secret.word);
+    var decodedUsers = jwt.verify(jwtToken, process.env.WORD_JWT);
     const [status] = await conn.execute(
       `UPDATE ${TABLEUSUARIOS} SET bloqueado = ${onOff},
       id_usuario_modificado_por = ?,

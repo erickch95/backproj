@@ -3,9 +3,9 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const { validationResult } = require("express-validator");
 const conn = require("../config/dbConn");
-const secret = require("../config/jwtSecret");
 const TABLENAME = "TablaUsuarios";
-
+const env = require("dotenv");
+env.config();
 // Ingresar.
 exports.login = async (req, res, next) => {
   const errors = validationResult(req);
@@ -38,7 +38,7 @@ exports.login = async (req, res, next) => {
         role: row[0].rol_usuario,
         id: row[0].id_usuario,
       },
-      secret.word,
+      process.env.WORD_JWT,
       {
         expiresIn: "60m",
       }

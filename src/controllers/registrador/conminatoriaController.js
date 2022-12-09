@@ -7,7 +7,7 @@ const fs = require("fs"); // Conexion con el filesystem host.
 
 const TABLECONMINATORIAS = "TablaConminatorias";
 const TABLEUSUARIOS = "TablaUsuarios";
-const IP_API = "192.168.166.66:4000";
+
 const env = require("dotenv");
 env.config();
 // Funcion para eliminar un archivo subido si hay problemas en la validadcion.
@@ -123,7 +123,7 @@ exports.insertConmminatoria = async (req, res, next) => {
         message: `No hay archivo pdf.`,
       });
     }
-    const filePath = `http://${IP_API}/upload/${req.file.filename}`;
+    const filePath = `http://${process.env.IP_API}/upload/${req.file.filename}`;
     const jwtToken = req.headers.authorization.split(" ")[1];
     var decodedConminatorias = jwt.verify(jwtToken, process.env.WORD_JWT);
     const [rows] = await conn.execute(
@@ -570,7 +570,7 @@ exports.updateConminatoria = async (req, res, next) => {
       let old = req.body.directorio_pdf;
       let oldPath = "../uploadPDF/" + old.slice(34);
       deleteDocument(oldPath);
-      filePath = `http://${IP_API}/upload/${req.file.filename}`;
+      filePath = `http://${process.env.IP_API}/upload/${req.file.filename}`;
     } else {
       filePath = req.body.directorio_pdf;
     }

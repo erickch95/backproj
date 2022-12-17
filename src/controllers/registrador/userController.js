@@ -54,7 +54,9 @@ exports.registerUser = async (req, res, next) => {
 
   if (!errors.isEmpty()) {
     console.log("Registro usuario, error:", errors.array());
-    return res.status(422).send({ message: errors.array() });
+    return res
+      .status(422)
+      .send({ message: errors.array({ onlyFirstError: true })[0].msg });
   }
   try {
     const noRegistradorUsers = await isRegistradorUsers(req, res);
@@ -211,8 +213,12 @@ exports.updateUser = async (req, res, next) => {
   console.log("ID USER", req.body.id_usuario);
   console.log("CEDULA", req.body.cedula);
   const errors = validationResult(req);
+
   if (!errors.isEmpty()) {
-    return res.status(422).send({ message: errors.array() });
+    console.log("Registro usuario, error:", errors.array());
+    return res
+      .status(422)
+      .send.send({ message: errors.array({ onlyFirstError: true })[0].msg });
   }
   try {
     const noRegistradorUsers = await isRegistradorUsers(req, res);

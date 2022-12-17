@@ -17,11 +17,11 @@ router.patch(
       .notEmpty()
       .trim()
       .custom((value) => value.replace(/\s\s+/g, " ")),
-    body("clave", "Minimo 6 caracteres.")
+    body("clave", "Minimo 8 caracteres.")
       .optional()
       .notEmpty()
       .trim()
-      .isLength({ min: 6 }),
+      .isLength({ min: 8 }),
     body("nombre", "Nombre es requerido, sin numeros.")
       .notEmpty()
       .trim()

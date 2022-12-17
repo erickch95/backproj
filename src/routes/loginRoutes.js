@@ -14,8 +14,8 @@ router.post(
     body("clave", "Minimo 8 caracteres.")
       .notEmpty()
       .trim()
-      .isAlphanumeric()
-      .isLength({ min: 4 }),
+      .isAlphanumeric("es-ES", { ignore: "." })
+      .isLength({ min: 8 }),
   ],
   login
 );

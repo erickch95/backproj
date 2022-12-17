@@ -21,7 +21,7 @@ router.post(
     body("clave", "Minimo 8 caracteres.")
       .notEmpty()
       .trim()
-      .isAlphanumeric()
+      .isAlphanumeric("es-ES", { ignore: "." })
       .isLength({ min: 8 }),
     body("nombre", "Nombre es requerido, sin numeros.")
       .notEmpty()

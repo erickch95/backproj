@@ -2,6 +2,9 @@
   "name":"back",
   "author": "erick",
   "version": "0.0.1",
+  "scripts": {
+    "server" : "nodemon server.js"
+  },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.0",
